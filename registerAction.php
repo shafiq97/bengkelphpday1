@@ -19,18 +19,30 @@
 session_start();
 include 'connection.php';
 
-$email = $_GET['email'];
-$password = $_GET['password'];
-$name = $_GET['name'];
+// if(isset($_POST['femaleCb'])){
+//   echo "Female";
+// }
+// if(isset($_POST['maleCb'])){
+//   echo "male";
+// }
 
-$sql = "INSERT INTO `user_login`(`email`, `name`, `password`) VALUES ('$email','$name','$password')";
-
-if ($conn->query($sql) === TRUE) {
-  // echo "New record created successfully";
-  header("location: login.php");
-} else {
-  echo "Error: " . $sql . "<br>" . $conn->error;
+if(isset($_POST['genderSelect'])){
+  echo $_POST['genderSelect'];
 }
+
+// $email = $_GET['email'];
+// $password = $_GET['password'];
+// $password = md5($password);
+// $name = $_GET['name'];
+
+// $sql = "INSERT INTO `user_login`(`email`, `name`, `password`) VALUES ('$email','$name','$password')";
+
+// if ($conn->query($sql) === TRUE) {
+//   // echo "New record created successfully";
+//   header("location: login.php");
+// } else {
+//   echo "Error: " . $sql . "<br>" . $conn->error;
+// }
 
 $conn->close();
 

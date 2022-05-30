@@ -20,7 +20,12 @@ session_start();
 include 'connection.php';
 
 $email = $_POST['email'];
+
+// raw value
 $password = $_POST['password'];
+
+// changed to md5 encryption
+$password = md5($password);
 
 // sql query to concatenate string
 // $sql = "SELECT * FROM user_login where email = \"$email\" and password = \"$password\" ";
@@ -36,6 +41,8 @@ if ($result->num_rows > 0) {
   while ($row = $result->fetch_assoc()) {
     // Set session
     $_SESSION['logged_in_user'] = $row['email'];
+    header("location: index.php");
+
     if($row['role'] === 'admin'){
       header("location: index.php");
     }
