@@ -2,8 +2,21 @@
 include 'connection.php';
 session_start();
 // 1. to-do
-if (!isset($_SESSION['logged_in_user'])) {
-  header("login.php");
+if (isset($_SESSION['logged_in_user'])) {
+  // header("login.php");
+  $email = $_SESSION['logged_in_user'];
+
+  $sql = "SELECT * FROM user_login where email = '$email'";
+
+  // echo $sql;
+  $result = $conn->query($sql);
+
+  if ($result->num_rows > 0) {
+    // output data of each row
+    while ($row = $result->fetch_assoc()) {
+      $image = $row['image'];
+    }
+  }
 }
 ?>
 
@@ -209,7 +222,7 @@ if (!isset($_SESSION['logged_in_user'])) {
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Shafiq</span>
-                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                <img class="img-profile rounded-circle" src="uploads/<?php echo $image ?>">
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -277,15 +290,24 @@ if (!isset($_SESSION['logged_in_user'])) {
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                  <form action="registerAction.php" method="POST">
+                  <form action="registerAction.php" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                       <label for="exampleInputEmail1">Email address</label>
-                      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="name">
+                      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email" disabled value="<?php echo $email ?>">
+                      <input type="hidden" class="form-control" placeholder="Enter email" name="email" value="<?php echo $email ?>">
                       <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Name</label>
+                      <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter name" name="name">
                     </div>
                     <div class="form-group">
                       <label for="exampleInputPassword1">Password</label>
                       <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputPassword1">Upload Image</label><br>
+                      <input type="file" name="fileToUpload" id="fileToUpload">
                     </div>
                     <div class="form-check">
                       <input type="checkbox" class="form-check-input" name="femaleCb" id="exampleCheck1">
@@ -302,24 +324,24 @@ if (!isset($_SESSION['logged_in_user'])) {
                     <div class="form-check mb-3">
                       <select class="form-select" aria-label="Default select example" name="genderSelect">
                         <option value="" selected>Default</option>
-                        <?php 
-                          $sql = "SELECT * FROM user_login";
+                        <?php
+                        $sql = "SELECT * FROM user_login";
 
-                          // echo $sql;
-                          $result = $conn->query($sql);
-                          
-                          if ($result->num_rows > 0) {
-                            // output data of each row
-                            while ($row = $result->fetch_assoc()) {
-                              ?>
-                                <option value="<?php echo $row['email'] ?>"><?php echo $row['email'] ?></option>
-                              <?php
-                            }
-                          } 
+                        // echo $sql;
+                        $result = $conn->query($sql);
+
+                        if ($result->num_rows > 0) {
+                          // output data of each row
+                          while ($row = $result->fetch_assoc()) {
+                        ?>
+                            <option value="<?php echo $row['email'] ?>"><?php echo $row['email'] ?></option>
+                        <?php
+                          }
+                        }
                         ?>
                       </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" name="adminSubmit" class="btn btn-primary">Submit</button>
                   </form>
                 </div>
               </div>
